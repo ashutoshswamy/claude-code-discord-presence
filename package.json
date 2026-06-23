@@ -2,7 +2,7 @@
   "name": "claude-code-discord-presence",
   "displayName": "Claude Code Discord Presence",
   "description": "Shows Discord Rich Presence when you're using Claude Code.",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "publisher": "ashutoshswamy",
   "license": "MIT",
   "engines": {
