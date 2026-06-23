@@ -1,0 +1,16 @@
+.vscode/**
+.vscode-test/**
+src/**
+out/**/*.map
+node_modules/**
+!node_modules/discord-rpc/**
+!node_modules/node-fetch/**
+!node_modules/whatwg-url/**
+!node_modules/undici-types/**
+**/*.ts
+!**/*.d.ts
+tsconfig.json
+.eslintrc*
+.gitignore
+*.md
+!README.md

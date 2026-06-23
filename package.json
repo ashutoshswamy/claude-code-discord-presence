@@ -1,0 +1,95 @@
+{
+  "name": "claude-code-discord-presence",
+  "displayName": "Claude Code Discord Presence",
+  "description": "Shows Discord Rich Presence when you're using Claude Code.",
+  "version": "1.0.0",
+  "publisher": "ashutoshswamy",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.125.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "discord",
+    "rich presence",
+    "claude",
+    "claude code",
+    "anthropic",
+    "ai",
+    "cli"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "icon": "assets/claude_code.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ashutoshswamy/claude-code-discord-presence"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "claudePresence.enable",
+        "title": "Claude Presence: Enable"
+      },
+      {
+        "command": "claudePresence.disable",
+        "title": "Claude Presence: Disable"
+      },
+      {
+        "command": "claudePresence.showStatus",
+        "title": "Claude Presence: Show Status"
+      }
+    ],
+    "configuration": {
+      "title": "Claude Code Discord Presence",
+      "properties": {
+        "claudePresence.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Discord Rich Presence for Claude Code"
+        },
+        "claudePresence.discordClientId": {
+          "type": "string",
+          "default": "1519037985092272288",
+          "description": "Your Discord Application Client ID (create one at discord.com/developers)"
+        },
+        "claudePresence.pollInterval": {
+          "type": "number",
+          "default": 5,
+          "description": "How often (in seconds) to check for Claude Code"
+        },
+        "claudePresence.detectionMode": {
+          "type": "string",
+          "enum": [
+            "terminal",
+            "process",
+            "both"
+          ],
+          "default": "both",
+          "description": "How to detect Claude Code: watch terminal names, scan running processes, or both"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "bundle": "esbuild extension.ts --bundle --outfile=out/extension.js --external:vscode --platform=node --target=node18 --format=cjs",
+    "bundle:watch": "npm run bundle -- --watch",
+    "vscode:prepublish": "npm run bundle",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@types/vscode": "^1.125.0",
+    "esbuild": "^0.28.1",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "discord-rpc": "^4.0.1"
+  }
+}
