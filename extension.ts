@@ -1,11 +1,13 @@
 import * as vscode from "vscode";
 import { DiscordPresenceManager } from "./discordPresence";
 import { TerminalDetector } from "./terminalDetector";
+import { ProcessDetector } from "./processDetector";
 import { StatusBarManager } from "./statusBar";
 import { CliToolDefinition } from "./cliTools";
 
 let discord: DiscordPresenceManager | null = null;
 let terminalDetector: TerminalDetector | null = null;
+let processDetector: ProcessDetector | null = null;
 let statusBar: StatusBarManager | null = null;
 let pollTimer: NodeJS.Timeout | null = null;
 let enabled = true;
@@ -124,6 +126,11 @@ async function startPresence(context: vscode.ExtensionContext): Promise<void> {
       dispose: () => terminalDetector?.dispose(),
     });
   }
+
+  // Init process detector
+  if (!processDetector) {
+    processDetector = new ProcessDetector();
+  }
   terminalDetector.onChange((tool) => {
     handleToolChange(tool).catch(console.error);
   });
@@ -152,7 +159,8 @@ function stopPolling(): void {
 async function tick(): Promise<void> {
   if (!enabled) return;
 
-  const detected = terminalDetector?.getActiveTool() ?? null;
+  const detected =
+    terminalDetector?.getActiveTool() ?? (await processDetector?.detect()) ?? null;
 
   if (detected?.id !== currentActiveTool?.id) {
     await handleToolChange(detected);
