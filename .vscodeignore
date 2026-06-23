@@ -1,12 +1,10 @@
 .vscode/**
 .vscode-test/**
+.claude/**
 src/**
-out/**/*.map
+out/**
+!out/extension.js
 node_modules/**
-!node_modules/discord-rpc/**
-!node_modules/node-fetch/**
-!node_modules/whatwg-url/**
-!node_modules/undici-types/**
 **/*.ts
 !**/*.d.ts
 tsconfig.json
@@ -14,3 +12,4 @@ tsconfig.json
 .gitignore
 *.md
 !README.md
+*.vsix

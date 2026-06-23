@@ -1,12 +1,10 @@
 import * as vscode from "vscode";
 import { DiscordPresenceManager } from "./discordPresence";
-import { ProcessDetector } from "./processDetector";
 import { TerminalDetector } from "./terminalDetector";
 import { StatusBarManager } from "./statusBar";
 import { CliToolDefinition } from "./cliTools";
 
 let discord: DiscordPresenceManager | null = null;
-let processDetector: ProcessDetector | null = null;
 let terminalDetector: TerminalDetector | null = null;
 let statusBar: StatusBarManager | null = null;
 let pollTimer: NodeJS.Timeout | null = null;
@@ -109,7 +107,6 @@ async function startPresence(context: vscode.ExtensionContext): Promise<void> {
     "discordClientId",
     "1519037985092272288"
   );
-  const detectionMode = config.get<string>("detectionMode", "both");
 
   statusBar?.showConnecting();
 
@@ -121,24 +118,15 @@ async function startPresence(context: vscode.ExtensionContext): Promise<void> {
   await discord.connect();
 
   // Init terminal detector
-  if (detectionMode !== "process") {
-    if (!terminalDetector) {
-      terminalDetector = new TerminalDetector();
-      context.subscriptions.push({
-        dispose: () => terminalDetector?.dispose(),
-      });
-    }
-    terminalDetector.onChange((tool) => {
-      handleToolChange(tool).catch(console.error);
+  if (!terminalDetector) {
+    terminalDetector = new TerminalDetector();
+    context.subscriptions.push({
+      dispose: () => terminalDetector?.dispose(),
     });
   }
-
-  // Init process detector
-  if (detectionMode !== "terminal") {
-    if (!processDetector) {
-      processDetector = new ProcessDetector();
-    }
-  }
+  terminalDetector.onChange((tool) => {
+    handleToolChange(tool).catch(console.error);
+  });
 
   // Start polling (stop first in case of re-enable)
   stopPolling();
@@ -164,20 +152,7 @@ function stopPolling(): void {
 async function tick(): Promise<void> {
   if (!enabled) return;
 
-  const config = vscode.workspace.getConfiguration("claudePresence");
-  const detectionMode = config.get<string>("detectionMode", "both");
-
-  let detected: CliToolDefinition | null = null;
-
-  // Terminal detector result (already event-driven, but we poll for status)
-  if (detectionMode !== "process" && terminalDetector) {
-    detected = terminalDetector.getActiveTool();
-  }
-
-  // Process scan (higher accuracy, polls on interval)
-  if (!detected && detectionMode !== "terminal" && processDetector) {
-    detected = await processDetector.detect();
-  }
+  const detected = terminalDetector?.getActiveTool() ?? null;
 
   if (detected?.id !== currentActiveTool?.id) {
     await handleToolChange(detected);

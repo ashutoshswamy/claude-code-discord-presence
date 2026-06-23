@@ -2,7 +2,7 @@
   "name": "claude-code-discord-presence",
   "displayName": "Claude Code Discord Presence",
   "description": "Shows Discord Rich Presence when you're using Claude Code.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "ashutoshswamy",
   "license": "MIT",
   "engines": {
@@ -54,23 +54,13 @@
         },
         "claudePresence.discordClientId": {
           "type": "string",
-          "default": "1519037985092272288",
+          "default": "1519096224693620908",
           "description": "Your Discord Application Client ID (create one at discord.com/developers)"
         },
         "claudePresence.pollInterval": {
           "type": "number",
           "default": 5,
-          "description": "How often (in seconds) to check for Claude Code"
-        },
-        "claudePresence.detectionMode": {
-          "type": "string",
-          "enum": [
-            "terminal",
-            "process",
-            "both"
-          ],
-          "default": "both",
-          "description": "How to detect Claude Code: watch terminal names, scan running processes, or both"
+          "description": "How often (in seconds) to refresh the Discord presence status"
         }
       }
     }
